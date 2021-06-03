@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="BankDb" Class="BankDbDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.;Initial Catalog=BankDb;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="BankDbConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Account" Member="Accounts">
+    <Type Name="Account">
+      <Column Name="IBAN" Type="System.String" DbType="NVarChar(30) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="AccountTypeCode" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="Firstname" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Lastname" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Mobile" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Balance" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="TransactionDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Account_TransactionAccount" Member="TransactionAccounts" ThisKey="IBAN" OtherKey="ToIBAN" Type="TransactionAccount" />
+      <Association Name="AccountType_Account" Member="AccountType" ThisKey="AccountTypeCode" OtherKey="AccountTypeCode" Type="AccountType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AccountType" Member="AccountTypes">
+    <Type Name="AccountType">
+      <Column Name="AccountTypeCode" Type="System.String" DbType="NVarChar(1) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="AccountTypeName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="AccountType_Account" Member="Accounts" ThisKey="AccountTypeCode" OtherKey="AccountTypeCode" Type="Account" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TransactionType" Member="TransactionTypes">
+    <Type Name="TransactionType">
+      <Column Name="TransactionTypeCode" Type="System.String" DbType="NVarChar(1) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="TransactionTypeName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="TransactionType_TransactionAccount" Member="TransactionAccounts" ThisKey="TransactionTypeCode" OtherKey="TransactionTypeCode" Type="TransactionAccount" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TransactionAccount" Member="TransactionAccounts">
+    <Type Name="TransactionAccount">
+      <Column Name="TransactionId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FromIBAN" Type="System.String" DbType="NVarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="ToIBAN" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="TransactionTypeCode" Type="System.String" DbType="NVarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="TransactionDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="Account_TransactionAccount" Member="Account" ThisKey="ToIBAN" OtherKey="IBAN" Type="Account" IsForeignKey="true" />
+      <Association Name="TransactionType_TransactionAccount" Member="TransactionType" ThisKey="TransactionTypeCode" OtherKey="TransactionTypeCode" Type="TransactionType" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
